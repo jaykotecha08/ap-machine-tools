@@ -1,0 +1,15 @@
+{
+  "name": "A.P. Machine Tools",
+  "short_name": "A.P. Tools",
+  "description": "Ravi & A.P. brand hydraulic and mechanical jacks, Rajkot.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0e16",
+  "theme_color": "#0a0e16",
+  "icons": [
+    { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./media/logo-legacy.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}

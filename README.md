@@ -1,0 +1,118 @@
+# A.P. Machine Tools — website
+
+A redesign of [apmachinetools.net](https://www.apmachinetools.net/) as a fast,
+responsive, app-like static site. Built as a **preview**: all content lives in one
+typed module so a CMS and database can be wired in later without touching the UI.
+
+## Stack
+
+| Concern | Choice |
+| --- | --- |
+| Build | Vite 7 |
+| UI | React 19 + TypeScript (strict) |
+| Styling | Tailwind CSS v4 (CSS-first `@theme` tokens) |
+| Icons | lucide-react |
+| Routing | react-router-dom 7 |
+| Hosting | GitHub Pages via GitHub Actions |
+
+No CSS framework overrides, no runtime CSS-in-JS, no jQuery. Production bundle is
+~88 kB gzipped JS + ~8 kB gzipped CSS.
+
+## Running locally
+
+```bash
+npm install
+npm run dev        # http://localhost:5173/ap-machine-tools/
+npm run build      # typecheck + production build into dist/
+npm run preview    # serve the production build
+```
+
+## Deploying
+
+Pushing to `claude/ap-machine-tools-redesign-kt3se6` runs
+`.github/workflows/deploy.yml`, which builds and publishes to GitHub Pages.
+
+**One-time setup:** in the repo, go to *Settings → Pages* and set
+**Source = GitHub Actions**. Without that the workflow's deploy step fails.
+
+The site then lives at `https://jaykotecha08.github.io/ap-machine-tools/`.
+
+### Moving to the real domain
+
+`vite.config.ts` reads `BASE_PATH` (default `/ap-machine-tools/`). To serve from
+`apmachinetools.net`:
+
+```bash
+BASE_PATH=/ SITE_ORIGIN=https://www.apmachinetools.net npm run build
+```
+
+…and add a `CNAME` file to `public/`.
+
+### SPA routing on Pages
+
+GitHub Pages has no rewrite rules, so `scripts/postbuild.mjs` copies
+`index.html` to `404.html`. Pages serves that for unknown paths and the router
+takes over, which is what makes `/products` and `/products#car-jack` work as
+direct links. The same script generates `sitemap.xml`.
+
+## Where the content lives
+
+Everything the site renders comes from **`src/content/site.ts`**, typed by
+`src/content/types.ts`. Product ranges, model lists, capacities, copy, contact
+details and working hours are all there. Nothing is hardcoded in components.
+
+When the CMS lands, replace that module with a loader returning the same shapes
+(`SiteContent`) and no component needs to change.
+
+## Content provenance
+
+The copy is taken from the client's existing site and the supplied legacy
+source, not invented:
+
+- **Company narrative, director, quality process** — the About and Quality text
+  on the current site.
+- **Product ranges and model names** — the current `products.aspx` catalogue
+  (39 models across 6 ranges, tonnages 4 T to 80 T).
+- **Phone and email** — the header of the legacy page source.
+- **Product photography** — the six category images from the current site,
+  carried over as-is.
+
+### Needs confirmation before go-live
+
+- [ ] **Street address.** `contact.addressLines` is sourced from public business
+      listings, not from the client. Confirm the exact works/office address.
+- [ ] **Working hours.** `contact.hours` is a placeholder — confirm real hours.
+- [ ] **WhatsApp number.** Currently the same as the phone number; confirm it
+      is WhatsApp-enabled.
+
+### Known asset limitation
+
+The six product photographs are the originals from the current site and are only
+**235 × 157 px**. They are displayed larger than that and look soft on high-DPI
+screens. Replacing them with proper studio photography (ideally 1600 px wide,
+shot on the same neutral backdrop) is the single biggest visual upgrade
+available. Drop the new files into `public/media/products/` under the same
+filenames and nothing else needs to change.
+
+## Design notes
+
+- **Mobile is app-shaped.** A fixed bottom tab bar, a frosted sticky header, a
+  full-height drawer, `env(safe-area-inset-*)` padding, momentum-scroll
+  segmented controls, and `overscroll-behavior` to kill rubber-banding.
+- **Design tokens** are declared once in `src/styles/index.css` under `@theme`:
+  a graphite `steel` ramp, the `brand` red lifted from the original A.P. mark,
+  and `--color-studio` (`#cdbc9e`) — the backdrop shared by every product
+  photograph, reused as the card colour so the photos read as intentional.
+- **Motion is progressive.** Reveal-on-scroll is driven by `IntersectionObserver`
+  and degrades to always-visible where it is unavailable. Everything is disabled
+  under `prefers-reduced-motion`.
+- **Accessibility.** Skip link, labelled landmarks, `aria-expanded` on the menu,
+  visible focus rings, real form labels, alt text on every image.
+
+## Verified
+
+- `tsc --noEmit` clean.
+- All five routes plus the 404 render with **no console errors** and **no
+  horizontal overflow** at 390 px and 1440 px (checked in Chromium).
+- Deep links and hash anchors resolve correctly under GitHub Pages' 404
+  fallback semantics.
