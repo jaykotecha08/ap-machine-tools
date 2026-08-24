@@ -22,7 +22,7 @@ No CSS framework overrides, no runtime CSS-in-JS, no jQuery. Production bundle i
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/ap-machine-tools/
+npm run dev        # http://localhost:5173/
 npm run build      # typecheck + production build into dist/
 npm run preview    # serve the production build
 ```
@@ -37,18 +37,24 @@ Pages on via the API on the first run — no manual setup needed. If your accoun
 plan does not permit that (Pages on private repos needs a paid plan), enable it
 by hand at *Settings → Pages → Source = GitHub Actions* and re-run the workflow.
 
-The site then lives at `https://jaykotecha08.github.io/ap-machine-tools/`.
+The site is served at **https://preview-ap-machine-tools.jaykotecha.online**.
 
-### Moving to the real domain
+`public/CNAME` pins that custom domain. Keep the file — GitHub Pages reads the
+domain from the deployed artifact, so removing it drops the custom domain on the
+next deploy.
 
-`vite.config.ts` reads `BASE_PATH` (default `/ap-machine-tools/`). To serve from
-`apmachinetools.net`:
+### Changing where it is served
+
+`vite.config.ts` reads `BASE_PATH` (default `/`, correct for a custom domain at
+a site root) and `scripts/postbuild.mjs` reads `SITE_ORIGIN` for the sitemap.
+To build for the bare GitHub Pages project URL instead:
 
 ```bash
-BASE_PATH=/ SITE_ORIGIN=https://www.apmachinetools.net npm run build
+BASE_PATH=/ap-machine-tools/ SITE_ORIGIN=https://jaykotecha08.github.io npm run build
 ```
 
-…and add a `CNAME` file to `public/`.
+For the production domain, update `public/CNAME` and build with
+`SITE_ORIGIN=https://www.apmachinetools.net`.
 
 ### SPA routing on Pages
 

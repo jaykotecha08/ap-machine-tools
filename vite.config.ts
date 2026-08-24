@@ -2,9 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// Repo is served from https://<user>.github.io/ap-machine-tools/
-// Override with BASE_PATH=/ when moving to a custom domain (apmachinetools.net).
-const base = process.env.BASE_PATH ?? '/ap-machine-tools/'
+// Served from the custom domain preview-ap-machine-tools.jaykotecha.online,
+// which is a site root — hence '/'. public/CNAME pins the domain across
+// deploys. Set BASE_PATH=/ap-machine-tools/ to build for the bare
+// <user>.github.io/<repo>/ URL instead.
+const base = process.env.BASE_PATH ?? '/'
 
 export default defineConfig({
   base,

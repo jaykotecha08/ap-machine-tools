@@ -2,8 +2,9 @@ import { copyFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 const dist = resolve('dist')
-const base = process.env.BASE_PATH ?? '/ap-machine-tools/'
-const origin = process.env.SITE_ORIGIN ?? 'https://jaykotecha08.github.io'
+const base = process.env.BASE_PATH ?? '/'
+const origin =
+  process.env.SITE_ORIGIN ?? 'https://preview-ap-machine-tools.jaykotecha.online'
 const routes = ['', 'products', 'about', 'quality', 'contact']
 
 // GitHub Pages serves 404.html for any unknown path. Shipping a copy of the
