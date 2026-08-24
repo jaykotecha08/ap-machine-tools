@@ -32,8 +32,10 @@ npm run preview    # serve the production build
 Pushing to `claude/ap-machine-tools-redesign-kt3se6` runs
 `.github/workflows/deploy.yml`, which builds and publishes to GitHub Pages.
 
-**One-time setup:** in the repo, go to *Settings → Pages* and set
-**Source = GitHub Actions**. Without that the workflow's deploy step fails.
+The workflow passes `enablement: true` to `actions/configure-pages`, which turns
+Pages on via the API on the first run — no manual setup needed. If your account
+plan does not permit that (Pages on private repos needs a paid plan), enable it
+by hand at *Settings → Pages → Source = GitHub Actions* and re-run the workflow.
 
 The site then lives at `https://jaykotecha08.github.io/ap-machine-tools/`.
 
