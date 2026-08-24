@@ -6,36 +6,45 @@
    original A.P. mark, with a machined-amber accent for load data.
    ============================================================ */
 @theme {
-  --color-steel-50:  #f5f7fa;
-  --color-steel-100: #e9edf3;
-  --color-steel-200: #cfd7e2;
-  --color-steel-300: #a7b3c4;
-  --color-steel-400: #74839a;
-  --color-steel-500: #52607a;
-  --color-steel-600: #3d4a60;
-  --color-steel-700: #2c3648;
-  --color-steel-800: #1c2432;
-  --color-steel-900: #121824;
-  --color-steel-950: #0a0e16;
+  --color-steel-50:  #fbfaf8;
+  --color-steel-100: #f2f1ed;
+  --color-steel-200: #e2e0d9;
+  --color-steel-300: #c5c2b8;
+  --color-steel-400: #928d80;
+  --color-steel-500: #6b6659;
+  --color-steel-600: #4f4a3f;
+  --color-steel-700: #3a362d;
+  --color-steel-800: #2a2721;
+  --color-steel-900: #1c1a16;
+  --color-steel-950: #12110e;
 
   --color-brand-50:  #fff1f1;
   --color-brand-100: #ffdede;
   --color-brand-200: #ffc2c2;
   --color-brand-300: #ff9797;
-  --color-brand-400: #fb5a5a;
-  --color-brand-500: #ee2b2b;
-  --color-brand-600: #d81616;
+  --color-brand-400: #fb5f4a;
+  --color-brand-500: #f03424;
+  --color-brand-600: #dd1c11;
   --color-brand-700: #b51010;
   --color-brand-800: #951313;
   --color-brand-900: #7c1616;
 
-  --color-amber-load: #f5a524;
+  --color-amber-load: #f59e0b;
+
+  /* Per-category accents — used for chips, rails and store filters. */
+  --color-cat-ravi:      #dd1c11;
+  --color-cat-garage:    #0f7fbe;
+  --color-cat-hydraulic: #e07b00;
+  --color-cat-mechanical:#12876f;
+  --color-cat-car:       #7c4dcc;
+  --color-cat-machinery: #0b6fa8;
 
   /* The uniform studio backdrop shared by every product photograph. */
   --color-studio: #cdbc9e;
+  --color-studio-tint: #efe7db;
 
-  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
   --radius-xl2: 1.25rem;
@@ -72,7 +81,7 @@
     background: var(--color-steel-50);
     color: var(--color-steel-900);
     font-family: var(--font-sans);
-    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+    font-feature-settings: "ss01";
     -webkit-font-smoothing: antialiased;
     overscroll-behavior-y: none;
   }
@@ -84,8 +93,8 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
 
@@ -161,4 +170,52 @@
   width: 3.5rem;
   background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-700));
   border-radius: 999px;
+}
+
+/* ---------- Bright surfaces ----------
+   These replace the heavy near-black slabs the first pass leaned on. Colour
+   now carries the section rhythm instead of darkness. */
+
+/* Warm sunrise wash used behind the hero and page headers. */
+@utility bg-dawn {
+  background:
+    radial-gradient(120% 90% at 12% 0%, #fff2e6 0%, rgba(255, 242, 230, 0) 55%),
+    radial-gradient(90% 80% at 92% 8%, #ffe6e2 0%, rgba(255, 230, 226, 0) 60%),
+    linear-gradient(180deg, #fffdfb 0%, var(--color-steel-50) 100%);
+}
+
+/* Cooler counterpart so consecutive light sections still read as distinct. */
+@utility bg-mist {
+  background:
+    radial-gradient(100% 80% at 85% 0%, #e8f4fb 0%, rgba(232, 244, 251, 0) 60%),
+    linear-gradient(180deg, var(--color-steel-50) 0%, #ffffff 100%);
+}
+
+/* Energetic band for calls to action. */
+@utility bg-flare {
+  background: linear-gradient(115deg, var(--color-brand-600) 0%, #f0552b 45%, var(--color-amber-load) 100%);
+}
+
+/* Soft tinted plinth behind product photography. */
+@utility bg-plinth {
+  background: linear-gradient(165deg, #fffdfa 0%, var(--color-studio-tint) 100%);
+}
+
+/* Hairline grid, dark-on-light — the bright counterpart of bg-grid. */
+@utility bg-blueprint {
+  background-image:
+    linear-gradient(to right, rgb(28 26 22 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(28 26 22 / 0.05) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+
+/* Category accent, driven by a --accent variable set inline per card. */
+@utility accent-chip {
+  color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, white);
+  border-color: color-mix(in oklab, var(--accent) 24%, white);
+}
+
+@utility accent-bar {
+  background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 45%, white));
 }

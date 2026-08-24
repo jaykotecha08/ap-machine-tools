@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, Phone, Mail, MapPin } from 'lucide-react'
+import { Menu, X, Phone, Mail, MapPin, ShoppingBag } from 'lucide-react'
 import site from '../content/site'
+import { useQuote } from '../lib/quote'
 import { Logo } from './Logo'
 import { Button } from './Button'
 import { cn } from '../lib/cn'
@@ -10,6 +11,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
+  const { count } = useQuote()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -30,7 +32,7 @@ export function Header() {
   return (
     <>
       {/* Utility bar — desktop only, keeps contact one glance away. */}
-      <div className="hidden bg-steel-950 text-steel-300 lg:block">
+      <div className="hidden bg-steel-900 text-steel-300 lg:block">
         <div className="container-page flex h-10 items-center justify-between text-[0.8rem]">
           <span className="inline-flex items-center gap-2">
             <MapPin className="h-3.5 w-3.5 text-brand-500" aria-hidden="true" />
@@ -96,10 +98,27 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            {/* Wrapped rather than given `hidden sm:inline-flex`: the Button's own
-                `inline-flex` would win the display conflict at mobile widths. */}
-            <span className="hidden sm:block">
-              <Button to="/contact">Request a quote</Button>
+            {/* Basket link — the count is the only header element that changes
+                as you shop, so it carries the badge. */}
+            <Link
+              to="/quote"
+              aria-label={
+                count > 0
+                  ? `Quote request, ${count} item${count === 1 ? '' : 's'}`
+                  : 'Quote request'
+              }
+              className="relative hidden h-11 w-11 place-items-center rounded-full border border-steel-200 text-steel-800 transition-colors hover:bg-steel-100 sm:grid"
+            >
+              <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+              {count > 0 && (
+                <span className="absolute -top-1 -right-1 grid min-w-5 place-items-center rounded-full bg-brand-600 px-1 font-mono text-[0.62rem] leading-5 font-medium text-white">
+                  {count > 99 ? '99+' : count}
+                </span>
+              )}
+            </Link>
+
+            <span className="hidden lg:block">
+              <Button to="/store">Browse store</Button>
             </span>
             <button
               type="button"
@@ -155,6 +174,10 @@ export function Header() {
               </NavLink>
             ))}
             <div className="mt-6 grid gap-3">
+              <Button to="/quote" variant="outline" size="lg">
+                <ShoppingBag className="h-4 w-4" />
+                Quote request{count > 0 ? ` (${count})` : ''}
+              </Button>
               <Button href={`tel:${site.contact.phoneDial}`} size="lg">
                 <Phone className="h-4 w-4" /> {site.contact.phone}
               </Button>

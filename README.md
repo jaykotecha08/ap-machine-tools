@@ -12,11 +12,12 @@ typed module so a CMS and database can be wired in later without touching the UI
 | UI | React 19 + TypeScript (strict) |
 | Styling | Tailwind CSS v4 (CSS-first `@theme` tokens) |
 | Icons | lucide-react |
+| Type | Space Grotesk (display) + DM Sans (body) + JetBrains Mono (data) |
 | Routing | react-router-dom 7 |
 | Hosting | GitHub Pages via GitHub Actions |
 
 No CSS framework overrides, no runtime CSS-in-JS, no jQuery. Production bundle is
-~88 kB gzipped JS + ~8 kB gzipped CSS.
+~94 kB gzipped JS + ~8 kB gzipped CSS.
 
 ## Running locally
 
@@ -63,6 +64,35 @@ GitHub Pages has no rewrite rules, so `scripts/postbuild.mjs` copies
 takes over, which is what makes `/products` and `/products#car-jack` work as
 direct links. The same script generates `sitemap.xml`.
 
+## The store
+
+`/store` lists all 39 models from the legacy catalogue, with category filters,
+search, and sorting by capacity or name. Category and search live in the URL
+(`/store?category=car-jack&q=60`) so a filtered view is shareable. Each model
+has its own page at `/store/<slug>`.
+
+### Why it takes quote requests, not payments
+
+**The source catalogue publishes no prices — not one.** Rather than invent them,
+the store works as a request-for-quote basket: customers collect models and
+quantities, then send the whole list as one enquiry. For jacks sold to fleets
+and workshops in varying quantities, that is how the business actually prices
+anyway.
+
+The basket lives in `localStorage` (`apmt.quote.v1`) and survives reloads. Lines
+referencing a model that no longer exists are dropped on read, so a catalogue
+change cannot corrupt someone's basket.
+
+**To turn on real pricing later:** `Product` already carries an optional
+`price` field and `src/lib/quote.tsx` exports a `formatPrice` helper (INR).
+Populate `price` from the database and the store can start showing money.
+
+### Product data
+
+`src/content/products.ts` derives the 39 products from the category variants in
+`site.ts` rather than duplicating them — every model traces back to a name
+published on the current site. Slugs, build type and search text are computed.
+
 ## Where the content lives
 
 Everything the site renders comes from **`src/content/site.ts`**, typed by
@@ -79,8 +109,11 @@ source, not invented:
 
 - **Company narrative, director, quality process** — the About and Quality text
   on the current site.
-- **Product ranges and model names** — the current `products.aspx` catalogue
-  (39 models across 6 ranges, tonnages 4 T to 80 T).
+- **Product ranges and model names** — the current `products.aspx` catalogue:
+  all 39 models across 6 ranges, tonnages 4 T to 80 T. These are the store's
+  entire inventory; no model was invented.
+- **No prices** appear anywhere in the source, which is why the store collects
+  quote requests instead of taking payment. See "The store" above.
 - **Phone and email** — the header of the legacy page source.
 - **Product photography** — the six category images from the current site,
   carried over as-is.
@@ -93,24 +126,37 @@ source, not invented:
 - [ ] **WhatsApp number.** Currently the same as the phone number; confirm it
       is WhatsApp-enabled.
 
-### Known asset limitation
+### Known asset limitation — photography
 
-The six product photographs are the originals from the current site and are only
-**235 × 157 px**. They are displayed larger than that and look soft on high-DPI
-screens. Replacing them with proper studio photography (ideally 1600 px wide,
-shot on the same neutral backdrop) is the single biggest visual upgrade
-available. Drop the new files into `public/media/products/` under the same
-filenames and nothing else needs to change.
+Only **six** product photographs exist, one per range, and they are the
+originals from the current site at just **235 × 157 px**. Two consequences:
+
+1. Every model in a range shares one image, so 17 Ravi jacks look identical.
+   The store works around this by making **capacity the visual hero** of each
+   card — the real differentiator when choosing a jack — but it is a
+   workaround, not a fix.
+2. The images are displayed larger than their native size and look soft on
+   high-DPI screens.
+
+Proper per-model studio photography (ideally 1600 px wide, shot on the same
+neutral backdrop) is by far the biggest visual upgrade available. Drop new
+files into `public/media/products/` and add an `image` override in
+`src/content/products.ts` per model.
 
 ## Design notes
 
 - **Mobile is app-shaped.** A fixed bottom tab bar, a frosted sticky header, a
   full-height drawer, `env(safe-area-inset-*)` padding, momentum-scroll
   segmented controls, and `overscroll-behavior` to kill rubber-banding.
-- **Design tokens** are declared once in `src/styles/index.css` under `@theme`:
-  a graphite `steel` ramp, the `brand` red lifted from the original A.P. mark,
-  and `--color-studio` (`#cdbc9e`) — the backdrop shared by every product
-  photograph, reused as the card colour so the photos read as intentional.
+- **Light by default.** The palette is a warm off-white `steel` ramp; colour
+  and gradient carry the section rhythm (`bg-dawn`, `bg-mist`, `bg-flare`)
+  rather than dark slabs. Only the footer stays dark, as an anchor.
+- **Per-category accents.** Each of the six ranges has its own colour
+  (`--color-cat-*`), applied through an `--accent` custom property to chips,
+  card rails and store filters, so the catalogue is scannable by colour.
+- **Design tokens** are declared once in `src/styles/index.css` under `@theme`,
+  including `--color-studio` (`#cdbc9e`) — the backdrop shared by every product
+  photograph, reused as the plinth colour so the photos read as intentional.
 - **Motion is progressive.** Reveal-on-scroll is driven by `IntersectionObserver`
   and degrades to always-visible where it is unavailable. Everything is disabled
   under `prefers-reduced-motion`.
@@ -120,7 +166,14 @@ filenames and nothing else needs to change.
 ## Verified
 
 - `tsc --noEmit` clean.
-- All five routes plus the 404 render with **no console errors** and **no
-  horizontal overflow** at 390 px and 1440 px (checked in Chromium).
+- All eight routes (home, store, product, quote, about, quality, contact, 404)
+  render with **no console errors, no 404'd assets and no horizontal overflow**
+  at 390 px and 1440 px, checked in Chromium.
+- Store behaviour exercised end to end: 39 products listed, category filter,
+  search, capacity sort in both directions, add-to-quote from card and from a
+  product page, quantity merging, basket persistence across reload, and an
+  unknown product slug falling through to the 404 page.
 - Deep links and hash anchors resolve correctly under GitHub Pages' 404
   fallback semantics.
+- The Google Fonts request was confirmed to serve all three families, and the
+  screenshots above were checked with the real fonts loaded.

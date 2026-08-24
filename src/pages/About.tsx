@@ -8,21 +8,25 @@ import { Reveal } from '../components/Reveal'
 
 const timeline = [
   {
+    accent: 'var(--color-cat-ravi)',
     year: '2000',
     title: 'Founded in Rajkot',
     body: 'A. P. Machine Tools is established in Rajkot, Gujarat, to serve the need for quality jack and hydraulic jack products.',
   },
   {
+    accent: 'var(--color-cat-hydraulic)',
     year: 'Brand',
     title: 'Ravi & A.P. take shape',
     body: 'The two marks become known as a symbol of quality in hydraulic jacks for Tata and Leyland tractor trailers.',
   },
   {
+    accent: 'var(--color-cat-mechanical)',
     year: 'Industry',
     title: 'Beyond the trailer',
     body: 'Hydraulic cylinders for cement concrete mixers and other tailor-made cylinders extend the range into industrial duty.',
   },
   {
+    accent: 'var(--color-cat-garage)',
     year: 'Today',
     title: 'Six ranges, one standard',
     body: 'Hydraulic jacks, jack accessories, mechanical screw jacks, garage tools, car jacks and made-to-order machinery.',
@@ -53,23 +57,23 @@ export default function About() {
         </div>
       </Section>
 
-      <Section className="bg-steel-900 text-white">
-        <SectionHeading
-          tone="dark"
-          eyebrow="Milestones"
-          title="How the workshop grew"
-        />
+      <Section className="bg-mist">
+        <SectionHeading eyebrow="Milestones" title="How the workshop grew" />
         <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {timeline.map((t, i) => (
             <Reveal
               key={t.title}
               delay={i * 80}
               as="li"
-              className="relative rounded-xl2 border border-white/10 bg-white/[0.04] p-6"
+              style={{ ['--accent' as string]: t.accent }}
+              className="relative overflow-hidden rounded-xl2 border border-steel-200 bg-white p-6 shadow-lift"
             >
-              <span className="font-mono text-sm font-medium text-brand-400">{t.year}</span>
-              <h3 className="mt-3 text-lg text-white">{t.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel-400">{t.body}</p>
+              <span className="accent-bar absolute inset-x-0 top-0 h-1" aria-hidden="true" />
+              <span className="accent-chip inline-block rounded-full border px-2.5 py-1 font-mono text-xs font-medium">
+                {t.year}
+              </span>
+              <h3 className="mt-3 text-lg text-steel-900">{t.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-steel-600">{t.body}</p>
             </Reveal>
           ))}
         </ol>

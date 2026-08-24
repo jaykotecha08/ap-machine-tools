@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { House, Grid2x2, Building2, ShieldCheck, Phone } from 'lucide-react'
+import { House, Grid2x2, ShoppingBag, Building2, Phone } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { useQuote } from '../lib/quote'
 import { cn } from '../lib/cn'
 
-const tabs: { to: string; label: string; icon: LucideIcon }[] = [
+const tabs: { to: string; label: string; icon: LucideIcon; badge?: boolean }[] = [
   { to: '/', label: 'Home', icon: House },
-  { to: '/products', label: 'Products', icon: Grid2x2 },
+  { to: '/store', label: 'Store', icon: Grid2x2 },
+  { to: '/quote', label: 'Quote', icon: ShoppingBag, badge: true },
   { to: '/about', label: 'About', icon: Building2 },
-  { to: '/quality', label: 'Quality', icon: ShieldCheck },
   { to: '/contact', label: 'Contact', icon: Phone },
 ]
 
@@ -16,13 +17,15 @@ const tabs: { to: string; label: string; icon: LucideIcon }[] = [
  * header nav takes over.
  */
 export function TabBar() {
+  const { count } = useQuote()
+
   return (
     <nav
       aria-label="Bottom navigation"
       className="surface-glass fixed inset-x-0 bottom-0 z-50 border-t border-steel-200/80 safe-bottom lg:hidden"
     >
       <ul className="mx-auto flex h-[var(--tabbar-h)] max-w-lg items-stretch">
-        {tabs.map(({ to, label, icon: Icon }) => (
+        {tabs.map(({ to, label, icon: Icon, badge }) => (
           <li key={to} className="flex-1">
             <NavLink
               to={to}
@@ -38,7 +41,7 @@ export function TabBar() {
                 <>
                   <span
                     className={cn(
-                      'grid h-8 w-12 place-items-center rounded-full transition-all duration-300 ease-[var(--ease-out-expo)]',
+                      'relative grid h-8 w-12 place-items-center rounded-full transition-all duration-300 ease-[var(--ease-out-expo)]',
                       isActive ? 'bg-brand-50' : 'bg-transparent',
                     )}
                   >
@@ -50,6 +53,11 @@ export function TabBar() {
                       strokeWidth={isActive ? 2.4 : 1.9}
                       aria-hidden="true"
                     />
+                    {badge && count > 0 && (
+                      <span className="absolute top-0 right-2 grid min-w-4.5 place-items-center rounded-full bg-brand-600 px-1 font-mono text-[0.6rem] leading-4.5 font-medium text-white">
+                        {count > 99 ? '99+' : count}
+                      </span>
+                    )}
                   </span>
                   <span className="text-[0.65rem] font-semibold tracking-tight">{label}</span>
                 </>

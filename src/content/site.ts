@@ -43,7 +43,7 @@ export const site: SiteContent = {
 
   nav: [
     { label: 'Home', to: '/' },
-    { label: 'Products', to: '/products' },
+    { label: 'Store', to: '/store' },
     { label: 'About', to: '/about' },
     { label: 'Quality', to: '/quality' },
     { label: 'Contact', to: '/contact' },
@@ -59,6 +59,7 @@ export const site: SiteContent = {
   categories: [
     {
       slug: 'ravi-brand-jack',
+      accent: 'var(--color-cat-ravi)',
       name: 'Ravi Brand Jack',
       blurb:
         'The flagship screw-jack line that made the Ravi name, built for Tata and Leyland tractor trailers and the commercial vehicle market.',
@@ -86,6 +87,7 @@ export const site: SiteContent = {
     },
     {
       slug: 'garage-tools',
+      accent: 'var(--color-cat-garage)',
       name: 'Garage Tools',
       blurb:
         'Workshop equipment for heavy-vehicle service bays — chassis jacks, engine handling trolleys, boards and stands.',
@@ -104,6 +106,7 @@ export const site: SiteContent = {
     },
     {
       slug: 'hydraulic-jack',
+      accent: 'var(--color-cat-hydraulic)',
       name: 'Hydraulic Jack',
       blurb:
         'Hydraulic jacks and accessories, including tailor-made hydraulic cylinders for cement concrete mixers and special applications.',
@@ -118,6 +121,7 @@ export const site: SiteContent = {
     },
     {
       slug: 'mechanical-jack',
+      accent: 'var(--color-cat-mechanical)',
       name: 'Mechanical Jack',
       blurb:
         'Mechanical screw jacks across the 30–75 tonne band, machined and heat-treated for repeatable load-holding.',
@@ -135,6 +139,7 @@ export const site: SiteContent = {
     },
     {
       slug: 'car-jack',
+      accent: 'var(--color-cat-car)',
       name: 'Car Jack',
       blurb:
         'Trolley-type jacks for passenger cars and light commercial vehicles, sized for garage and roadside use.',
@@ -144,6 +149,7 @@ export const site: SiteContent = {
     },
     {
       slug: 'machinery',
+      accent: 'var(--color-cat-machinery)',
       name: 'Machinery',
       blurb:
         'Plant machinery built to order, produced alongside the jack lines in the same Rajkot facility.',

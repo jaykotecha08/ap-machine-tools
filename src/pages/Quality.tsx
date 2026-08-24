@@ -32,26 +32,36 @@ export default function Quality() {
         </div>
       </Section>
 
-      <Section className="bg-steel-900 text-white">
+      <Section className="bg-mist">
         <SectionHeading
-          tone="dark"
           eyebrow="The process"
           title="From material inward to performance test"
           lead="A jack that fails in the field is a safety event, not a warranty claim. That is why nothing leaves untested."
         />
-        <ol className="mt-12 grid gap-px overflow-hidden rounded-xl2 border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {process.map((p, i) => (
-            <Reveal key={p.step} delay={i * 80} as="li" className="bg-steel-900 p-6">
-              <span className="font-mono text-3xl font-medium text-brand-500">{p.step}</span>
-              <h3 className="mt-4 text-lg text-white">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel-400">{p.body}</p>
+            <Reveal
+              key={p.step}
+              delay={i * 80}
+              as="li"
+              className="relative rounded-xl2 border border-steel-200 bg-white p-6 shadow-lift"
+            >
+              <span className="font-mono text-3xl font-medium text-brand-600">{p.step}</span>
+              <h3 className="mt-4 text-lg text-steel-900">{p.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-steel-600">{p.body}</p>
+              {i < 3 && (
+                <span
+                  className="absolute top-9 -right-3 hidden h-px w-6 bg-steel-300 lg:block"
+                  aria-hidden="true"
+                />
+              )}
             </Reveal>
           ))}
         </ol>
       </Section>
 
       <Section className="bg-white">
-        <Reveal className="mx-auto max-w-3xl rounded-xl2 border border-steel-200 bg-steel-50 p-8 text-center sm:p-12">
+        <Reveal className="mx-auto max-w-3xl rounded-xl2 border border-steel-200 bg-dawn p-8 text-center shadow-lift sm:p-12">
           <p className="font-display text-2xl leading-snug text-steel-900 sm:text-3xl">
             “Our products are marked by excellent reliability, durability and a high
             standard of performance.”

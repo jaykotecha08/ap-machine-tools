@@ -4,12 +4,26 @@ import { Hero } from '../components/Hero'
 import { StatsBand } from '../components/StatsBand'
 import { Section, SectionHeading } from '../components/Section'
 import { ProductCard } from '../components/ProductCard'
+import { StoreProductCard } from '../components/StoreProductCard'
+import products from '../content/products'
 import { CapabilityGrid } from '../components/CapabilityGrid'
 import { CtaBand } from '../components/CtaBand'
 import { Button } from '../components/Button'
 import { Reveal } from '../components/Reveal'
 
+/** One model from four different ranges, so the strip shows the spread. */
+const featuredSlugs = [
+  'ravi-brand-jack-4-ton-jack',
+  'garage-tools-engine-lifter-trolly',
+  'hydraulic-jack-70-ton-hydraulic-jack',
+  'car-jack-car-trolly-jack',
+]
+
 export default function Home() {
+  const featured = featuredSlugs
+    .map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p))
+
   return (
     <>
       <Hero />
@@ -18,13 +32,13 @@ export default function Home() {
       <Section>
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <SectionHeading
-            eyebrow="Our product"
+            eyebrow="Our ranges"
             title="Six ranges, one standard of build"
             lead="From the 4 tonne Ravi screw jack to 80 tonne heavy lifting and custom hydraulic cylinders."
           />
           <Reveal delay={120}>
-            <Button to="/products" variant="outline">
-              View all products
+            <Button to="/store" variant="outline">
+              Shop all {products.length} models
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Reveal>
@@ -39,21 +53,43 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* A taste of the store itself, so the catalogue is one tap away. */}
+      <Section className="bg-mist">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeading
+            eyebrow="In the store"
+            title="Popular models"
+            lead="Add what you need to a quote request and send the whole list in one message."
+          />
+          <Reveal delay={120}>
+            <Button to="/store" variant="outline">
+              Open the store
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </Reveal>
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          {featured.map((p, i) => (
+            <Reveal key={p.slug} delay={i * 60} className="h-full">
+              <StoreProductCard product={p} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
       {/* About strip */}
-      <section className="relative overflow-hidden bg-steel-900 text-white">
-        <div className="absolute inset-0 bg-grid" aria-hidden="true" />
+      <section className="relative overflow-hidden border-y border-steel-200 bg-mist">
         <div className="container-page relative grid gap-12 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
           <SectionHeading
-            tone="dark"
             eyebrow="Who we are"
             title={site.about.heading}
             lead={site.about.paragraphs[0]}
           />
-          <Reveal delay={100} className="space-y-5 text-sm leading-relaxed text-steel-300 lg:text-base">
+          <Reveal delay={100} className="space-y-5 text-sm leading-relaxed text-steel-600 lg:text-base">
             {site.about.paragraphs.slice(1, 3).map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
-            <Button to="/about" variant="light">
+            <Button to="/about" variant="outline">
               More about us
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
@@ -61,7 +97,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Section className="bg-steel-50">
+      <Section className="bg-white">
         <SectionHeading
           align="center"
           eyebrow="What we do"
@@ -73,7 +109,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="bg-white">
+      <Section className="bg-mist">
         <SectionHeading
           eyebrow="Quality"
           title="Checked at every process, tested at the end of every line"
